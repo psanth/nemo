@@ -1909,7 +1909,7 @@ local int parse_card (int icard, char *card, char *a1, char *a2, char *a3, char 
         a2[0] = 0;                   /* zero out the a2 parameter */
         i = 8;                          /* count where we are; starts at i=0 */
         while (*buf == ' ') {           /* skip leading blanks again */
-            *(buf++);  i++;             /*Edited to stop Wunused-variable*/
+            buf++;  i++;             
         }  
         for (cp=a3; i<FTSLINSIZ; i++)  /* and copy into a3 */
             *cp++ = *buf++;
@@ -1978,7 +1978,7 @@ local int parse_card (int icard, char *card, char *a1, char *a2, char *a3, char 
         }
     } /* end of parsing value */
     while (*buf == ' ')         /* skip blanks before the comment */
-        *(buf++);               /*Edited to stop Wunused-variable*/
+        buf++;               
     if (*buf != '/') {            /* if it is not a comment designator, quit */
         if (buf-card != FTSLINSIZ)
             dprintf(2,"### No comment or ??? in card %d, pos=%d\n",
