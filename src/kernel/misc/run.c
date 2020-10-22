@@ -51,7 +51,7 @@ int run_popen1(string exe, string file)
 {
   FILE *fp = popen(exe,"w");
   if (fp==NULL) return 1;
-  fprintf(fp,file);        /* has no args */
+  fprintf(fp,"%s", file);        /* has no args */
   fclose(fp);
   return 0;
 }

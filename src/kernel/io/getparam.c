@@ -1894,8 +1894,8 @@ local void setparam (string par, string val, string prompt)
 #if 0
         if (gets(line) == NULL) error("Null input");
 #else
-        // if (fgets(line,80,stdin) == NULL) error("Null input");
-	error("Can't do prompting anymore until fgets() is fixed");
+    if (fgets(line,80,stdin) == NULL) error("Null input");
+	//error("Can't do prompting anymore until fgets() is fixed");
 #endif
         val = line;
     }
