@@ -24,7 +24,7 @@ extern void nemo_main(void);	/* this must be be a C++ nemo_main too !! */
 int main(int argc,char *argv[])
 {
     if(argv[argc] != NULL) 
-       warning("Your C compiler seems to have an old-style (short) argv[]");
+       warning((char *)"Your C compiler seems to have an old-style (short) argv[]");
     initparam(argv,defv);		/* start                         */
     nemo_main();			/* call program                  */
     finiparam();			/* end                           */

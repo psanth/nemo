@@ -1254,7 +1254,7 @@ int fts_phead(fits_header *fh, string *print)
     }
     dsize = fts_dsize(fh);
     printf("headersize = %d bytes = %d %d-records\n",
-            fh->hlen, (fh->hlen - 1)/ftsblksiz_i + 1, ftsblksiz_i);
+            (int)(fh->hlen), (int)(fh->hlen - 1)/ftsblksiz_i + 1, ftsblksiz_i);
     printf("datasize = %ld bytes = %ld %d-records\n",
             dsize, (dsize-1)/ftsblksiz_i + 1, ftsblksiz_i);
     printf("__________________________________________________________\n");
@@ -1268,7 +1268,7 @@ int fts_phead(fits_header *fh, string *print)
  *
  */
 
-int fts_read_img_coord(
+void fts_read_img_coord(
 		       fits_header *fh,            /* (i)  pointer to fits header structure */
 		       double *crval1, 
 		       double *crval2,
@@ -1291,7 +1291,7 @@ int fts_read_img_coord(
 }
 
 
-static nnl = 0;
+static int nnl = 0;
 static void printnl(int fnl, int reset) {
   if (fnl==0) return;
   if (reset) {

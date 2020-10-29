@@ -535,15 +535,15 @@ static int dopcor (unsigned n, FcnEqDiff8 fcn, double x, double* y, double xend,
 	{
 	  nonsti = 0;
 	  iasti++;
-	  if (iasti == 15)
-	    if (fileout)
+	  if (iasti == 15) {
+	    if (fileout) {
 	      fprintf (fileout, "The problem seems to become stiff at x = %.16e\r\n", x);
-	    else
-	    {
+      } else {
 	      xout = x;
 	      hout = h;
 	      return -4;
 	    }
+    }
 	}
 	else
 	{
