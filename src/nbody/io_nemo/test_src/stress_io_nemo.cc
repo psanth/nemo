@@ -289,12 +289,12 @@ template <class T> bool StressIO_Nemo<T>::write()
 //------------------------------------------------------------------------------
 // NEMO parameters
 ::string defv[] = {  // use `::'string because of 'using namespace std'
-  "in=???\n             txt input file          ",
-  "precision=double\n       double (default) | float",
-  "VERSION=1.0\n       compiled on <"__DATE__"> JCL  ",
+  (char*)"in=???\n             txt input file          ",
+  (char*)"precision=double\n       double (default) | float",
+  (char*)"VERSION=1.0\n       compiled on <"__DATE__"> JCL  ",
   NULL
 };
-::string usage="stress test on io_nemo function";
+::string usage=(char*)"stress test on io_nemo function";
 
 //------------------------------------------------------------------------------
 // main
@@ -306,8 +306,8 @@ int main(int argc, char ** argv )
   initparam(argv,defv);
 
   // Get parameters
-  in     = getparam("in");
-  ftype  = getparam("precision");
+  in     = getparam((char*)"in");
+  ftype  = getparam((char*)"precision");
 
   std::string sftype=ftype;
   VClass * ltest;

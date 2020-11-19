@@ -1280,11 +1280,13 @@ real  *true_an;			/*  true anomaly			   */
 	real  derivative;	/*  d function / d ecc_an		   */ 
  	int  i;
 
-	if (ecc < 1.0)		/* inconsistent */
-		if (ecc < 0.0)
+	if (ecc < 1.0) {		/* inconsistent */
+		if (ecc < 0.0) {
 			error("keplershypeq(,,): negative eccentricity");
-		else
+		} else {
 			error("keplershypeq(,,):e <1 in a hyperbolic orbit");
+		}
+	}
 	if (mean_an > 0.0)
 		ecc_an = asinh( mean_an / ecc );   /* first guess for ecc_an */
 	else

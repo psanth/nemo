@@ -144,10 +144,10 @@ fi
 
 AC_ARG_ENABLE(pedantic, [  --enable-pedantic       compile for pedantic gcc], ok=$enableval, ok=no)
 if test "$ok" = "yes"; then
-  flags="-ansi -pedantic -Werror -Wall -W -Wmissing-prototypes -Wstrict-prototypes"
-  flags="$flags -Wtraditional -Wconversion -Wshadow -Wpointer-arith -Wcast-qual -Wcast-align"
-  flags="$flags -Wwrite-strings -Wnested-externs -fshort-enums -fno-common -Dinline= -g -O4"
-  flags="$flags -Wsign-compare  -Wtype-limits -Wignored-qualifiers -Wempty-body -Wclobbered -Wuninitialized"
+  flags="-ansi  -pedantic -Wall -Werror -W -Wmissing-prototypes"
+  flags="$flags -Wconversion -Wshadow -Wpointer-arith -Wcast-qual -Wcast-align"
+  flags="$flags -Wwrite-strings -Wnested-externs -fshort-enums -fno-common -Dinline= -g -O3"
+  flags="$flags -Wsign-compare  -Wtype-limits -Wignored-qualifiers -Wempty-body -Wuninitialized"
   CFLAGS="$CFLAGS $flags"
   CXXFLAGS="$CXXFLAGS $flags"
   # FFLAGS="$CFLAGS $flags"
