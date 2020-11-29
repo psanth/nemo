@@ -83,6 +83,7 @@ ERROR!  Sorry, NEMO now requires an ANSI C compiler
 #include <stdlib.h>
 #include <unistd.h>
 #include <errno.h>
+#include <limits.h>  
 
 #ifdef HAVE_MALLOC_H
 #include <malloc.h>
@@ -102,6 +103,7 @@ ERROR!  Sorry, NEMO now requires an ANSI C compiler
 
 #if STDC_HEADERS
 #include <string.h>
+#include <strings.h>
 #else
 # ifndef HAVE_STRCHR
 #   define strchr  index
@@ -307,6 +309,7 @@ typedef real (*float_proc)(float);
 #define   FORTRD     1.33333333333333333333
 #define   ONESVN     0.14285714285714285714
 #define   ONESIX     0.16666666666666666667
+#define   LN10       2.30258509299404568402 
 
 /*
  * angular conversion factors (multiplicative)
@@ -559,7 +562,7 @@ dprintf_pter get_dprintf(const_string, int);
 /* END of changes WD 12th June 2008 */
 
 /* this is to shut up e.g. gcc when allocate(n*sizeof(T)) is used */
-#define  sizeof  (size_t)sizeof
+// #define  sizeof  (size_t)sizeof
 
 /* core/common.c */
 void set_common(int id, int byte_size);
@@ -628,11 +631,6 @@ extern bool within(double val, string range, double fuzz);
 }
 #endif
 
-/* for tables: (ought to go into maxsizes.h) */
-
-#ifndef MAXLINES
-#define MAXLINES 10000
-#endif
 
 /* for solaris compiler SC4.2, doesn't appear to know HUGE .... */
 /* should fit double and single precision floating point        */

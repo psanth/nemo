@@ -67,8 +67,8 @@ double cputime2(int mode)
     else if (mode == 1)
         return_flag = buffer.tms_stime / ((double)CLK_TCK * 60.0);       /* return minutes */
     else if (mode == 2)
-        return_flag = pt/( (double)CLOCKS_PER_SEC*60.0);
-    return return_flag;
+        return pt/( (double)CLOCKS_PER_SEC*60.0);
+    return 0.0;    /* NEVER REACHED */
 }
 
 double cputime()

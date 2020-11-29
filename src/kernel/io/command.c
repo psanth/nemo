@@ -24,9 +24,13 @@ extern void freestrings(string *);
 extern int nemo_file_lines(string, int);
 
 #define VALID_TYPES "irs."
-
+#if (MIR_READLINE==1)
 static int todo_readline=0;
+#endif
 static char prompt[64];
+
+extern char *strdup(const char *s);         //C99   _XOPEN_SOURCE >= 500
+
 
 /*
  *
@@ -125,7 +129,7 @@ string *command_get(command *c)
 {
   char *s, line[1024];
   string *argv;
-  int i, icmd, n, na;
+  int i, icmd, n, na, sval;
 
   sprintf(prompt,"%s> ",c->name);
   
@@ -202,7 +206,8 @@ string *command_get(command *c)
   }
 
   if (line[0] == '!') {                         /* shell escape */
-    system(&line[1]);
+    sval = system(&line[1]);
+    if (sval) warning("bad system call");
     goto again;
   }
 

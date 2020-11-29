@@ -1254,8 +1254,9 @@ int fts_phead(fits_header *fh, string *print)
     }
     dsize = fts_dsize(fh);
     printf("headersize = %d bytes = %d %d-records\n",
-            (int)(fh->hlen), (int)(fh->hlen - 1)/ftsblksiz_i + 1, ftsblksiz_i);
-    printf("datasize = %ld bytes = %ld %d-records\n",
+            (int) fh->hlen, ((int) fh->hlen - 1)/ftsblksiz_i + 1, ftsblksiz_i);
+    if (dsize > 0) 
+      printf("datasize = %ld bytes = %ld %d-records\n",
             dsize, (dsize-1)/ftsblksiz_i + 1, ftsblksiz_i);
     else
       printf("datasize = 0 bytes = 0 %d-records\n", ftsblksiz_i);
