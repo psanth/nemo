@@ -227,9 +227,6 @@
 #include <unistd.h>
 #include <ctype.h>
 
-extern int fileno(FILE *stream);     //C99   _POSIX_C_SOURCE 
-char *strdup(const char *s);         //C99   _XOPEN_SOURCE >= 500
-int putenv(char *string);            //C99   _XOPEN_SOURCE
 
 //#if defined(ENABLE_OPENMP)
 #if _OPENMP

@@ -12,7 +12,6 @@
 #include <stdinc.h>
 #include <extstring.h>    
 
-char *strdup(const char *s);   //C99   _XOPEN_SOURCE >= 500
 
 #define IDF_COMMENT "c"
 #define IDF_REAL    "r"

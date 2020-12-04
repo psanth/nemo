@@ -13,7 +13,6 @@
 #include <getparam.h>
 #include <filestruct.h>
 
-extern int fileno(FILE *stream);    //C99   _POSIX_C_SOURCE
 
 string defv[] = {               /* DEFAULT INPUT PARAMETERS */
     "in=???\n                     input file name to test",

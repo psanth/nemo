@@ -51,14 +51,13 @@
 
 #include <stdinc.h>
 #include <unistd.h>
-#include <sys/types.h> //C99  off_t
+#include <sys/types.h>
 #include <strlib.h>
 #include <filestruct.h>
 #include <extstring.h>
 #include "filesecret.h"
 #include <stdarg.h>
 
-extern int fileno(FILE *);  //C99   should be in stdio.h   _POSIX_C_SOURCE
 
 extern int convert_d2f(int, double *, float  *);
 extern int convert_f2d(int, float  *, double *);

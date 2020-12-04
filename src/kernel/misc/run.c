@@ -15,7 +15,6 @@
 /* chdir */
 #include <unistd.h>
 
-FILE *popen(const char *command, const char *type);  //C99
 
 
 int run_mkdir(string name)
@@ -52,11 +51,7 @@ int run_popen1(string exe, string file)
 {
   FILE *fp = popen(exe,"w");
   if (fp==NULL) return 1;
-<<<<<<< HEAD
-  fprintf(fp,"%s", file);        /* has no args */
-=======
   fprintf(fp,"%s",file);
->>>>>>> nemo1/c99
   fclose(fp);
   return 0;
 }
