@@ -67,8 +67,8 @@ string defv[] = {
     "bzero=0\n          Offset conversion factor in raw mode (0)",
     "blank=\n           Blank value re-substitution value?",
     "relcoords=f\n      Use relative (to crpix) coordinates instead abs",
-    "axistype=0\n       Force axistype 0 (old, crpix==1) or 1 (new, crpix as is)",
-    "VERSION=5.1\n	18-feb-2015 PJT",
+    "axistype=1\n       Force axistype 0 (old, crpix==1) or 1 (new, crpix as is)",
+    "VERSION=5.2\n	6-jan-2021 PJT",
     NULL,
 };
 
@@ -113,7 +113,7 @@ void nemo_main()
     else if (nbox != 4) 
       error("Need 4 integers box=xmin,ymin,xmax,ymax");
     if (nbox>0) warning("New feature box= not fully tested");  /* > 2GP files wrong? */
-    dprintf(0,"npl=%d nbox=%d\n",npl,nbox);
+    dprintf(1,"npl=%d nbox=%d\n",npl,nbox);
     mode = getparam("mode");
     blankval = getparam("blank");
     Qblank = (*blankval != 0);

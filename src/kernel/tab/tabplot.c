@@ -107,7 +107,7 @@ string defv[] = {                /* DEFAULT INPUT PARAMETERS */
     "first=f\n           Layout first or last?",
     "readline=f\n        Interactively reading commands",
     "pyplot=\n           Template python plotting script",
-    "VERSION=4.0b\n	 21-nov-2020 PJT",
+    "VERSION=4.0a\n	 21-nov-2020 PJT",
     NULL
 };
 
@@ -170,7 +170,6 @@ void plot_points(int np, real xp[], real yp[], real dx[], real dy[], real xps[],
 void parse_pairsi(string key, int *pairs, int nycol);
 void parse_pairsr(string key, real *pairs, int nycol);
 double my_sqrt(double x);
-
 
 extern real smedian(int, real *);
 extern int nemo_file_lines(string, int);

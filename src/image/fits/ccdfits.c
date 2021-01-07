@@ -43,7 +43,8 @@
  *       6-apr-17   5.9  allow refmap to update only certain WCS (1,2,3)     PJT
  *       8-apr-17   6.0  new approach inheriting a new WCS
  *      14-jun-19   6.0a correct VSYS when in freq=t mode, fix cdelt1 in one common case
- *      19-jun-10   6.1  Output now in km/s
+ *      19-jun-19   6.1  Output now in km/s
+ *      27-dec-20   6.3  fitshead= header template keyword 
  *
  *  TODO:
  *      reference mapping has not been well tested, especially for 2D
@@ -56,6 +57,7 @@
 
 
 #include <stdinc.h>
+#include <time.h>
 #include <getparam.h>
 #include <vectmath.h>
 #include <filestruct.h>
@@ -88,7 +90,8 @@ string defv[] = {
 	"ndim=\n         Testing if only that many dimensions need to be written",
 	"select=1\n      Which image (if more than 1 present, 1=first) to select",
 	"blank=\n        If set, use this is the BLANK value in FITS (usual NaN)",
-        "VERSION=6.2\n   1-aug-2019 PJT",
+	"fitshead=\n     If used, the header of this file is used instead",
+        "VERSION=6.3b\n  5-jan-2021 PJT",
         NULL,
 };
 
@@ -114,6 +117,7 @@ bool Qrefmap;
 bool Qcrval, Qcdelt, Qcrpix;
 bool Qdummy;             /* write dummy axes ? */
 bool Qblank;
+bool Qfitshead; 
 real blankval;
 int  nrefaxis, refaxis[4];
 bool Qrefaxis[4];
@@ -125,6 +129,7 @@ FLOAT ref_crval[4] = {0,0,0,1},
 char  ref_ctype[4][80], ref_cunit[4][80];
 FLOAT restfreq;
 real  vsys;
+real  equinox = 2000.0;
 
 void setparams(void);
 void write_fits(string,imageptr);
@@ -145,6 +150,34 @@ void nemo_main()
   strclose(instr);                           /* close image file */
   write_fits(getparam("out"),iptr);          /* write fits file */
   free_image(iptr);
+
+  // output file needs to get the header of fitshead=
+  // this is a big hack, with little error checking on size matching
+  // so the fits file could be illegal
+  if (Qfitshead) {
+    warning("Replacing header from %s",getparam("fitshead"));
+    
+    static char fnh[32], fnd[32], cmd[256];
+#if 0    
+    strcpy(fnh,"tmp.head");
+    strcpy(fnd,"tmp.data");
+#else
+    sprintf(fnh,"tmp_%d.head",getpid());
+    sprintf(fnd,"tmp_%d.data",getpid());
+#endif
+    sprintf(cmd,"scanfits in=%s out=%s select=header", getparam("fitshead"), fnh);
+    dprintf(1,"%s\n",cmd);
+    if (system(cmd)) error("Could not cmd=%s",cmd);
+    sprintf(cmd,"scanfits in=%s out=%s select=data",   getparam("out"),       fnd);
+    dprintf(1,"%s\n",cmd);
+    if (system(cmd)) error("Could not cmd=%s",cmd);
+    sprintf(cmd,"cat %s %s > %s", fnh, fnd, getparam("out"));
+    dprintf(1,"%s\n",cmd);
+    if (system(cmd)) error("Could not cmd=%s",cmd);
+    sprintf(cmd,"rm %s %s", fnh, fnd);
+    dprintf(1,"%s\n",cmd);
+    if (system(cmd)) error("Could not cmd=%s",cmd);
+  }
 }
 
 void setparams(void)
@@ -180,6 +213,7 @@ void setparams(void)
   Qfreq     = getbparam("freq");
   Qblank    = hasvalue("blank");
   if (Qblank) blankval = getrparam("blank");
+  Qfitshead = hasvalue("fitshead");
 
   
   Qrefmap = hasvalue("refmap");
@@ -362,7 +396,7 @@ void write_fits(string name,imageptr iptr)
 	if (ndim>2) fitwrhdr(fitsfile,"CDELT3",ref_cdelt[2]*scale[2]);
 	if (ndim>3) fitwrhdr(fitsfile,"CDELT4",1.0);
       } else {
-	fitwrhdr(fitsfile,"CDELT1",-dx[p[0]]);    
+	fitwrhdr(fitsfile,"CDELT1",dx[p[0]]);    
 	fitwrhdr(fitsfile,"CDELT2",dx[p[1]]);    
 	if (ndim>2) {
 	  if (Qfreq)
@@ -396,8 +430,8 @@ void write_fits(string name,imageptr iptr)
       fitwrhdr(fitsfile,"RESTFRQ",restfreq);  
 
       if (ndim>3) fitwrhda(fitsfile,"CTYPE4",ctype4_name);
-      fitwrhdr(fitsfile,"RESTFREQ",restfreq);
-      //
+      // fitwrhdr(fitsfile,"RESTFREQ",restfreq);
+
       fitwrhda(fitsfile,"CUNIT1","deg");
       fitwrhda(fitsfile,"CUNIT2","deg");
       if (Qfreq)
@@ -432,6 +466,10 @@ void write_fits(string name,imageptr iptr)
     fitwrhdr(fitsfile,"DATAMAX",mapmax);
     fitwrhda(fitsfile,"ORIGIN",origin);
     fitwrhda(fitsfile,"SPECSYS","LSRK");     /* spectral reference frame */
+    fitwrhda(fitsfile,"RADECSYS","FK5");     // ICRS or FK5
+    fitwrhdr(fitsfile,"EQUINOX", equinox);   //
+    warning("Using FK5/2000");
+    
     
 
     cp = getenv("USER");                                /* AUTHOR */
@@ -442,8 +480,22 @@ void write_fits(string name,imageptr iptr)
         fitwrhda(fitsfile,"AUTHOR","NEMO");
         fitwrhda(fitsfile,"OBSERVER","NEMO");
     }
+
+    if (1) {                // DATE-OBS is "now"
+      char toutstr[200];
+      time_t t;
+      struct tm *tmp;
+      const char *fmt = "%Y-%m-%dT%H:%M:%S";
+
+      t = time(NULL);
+      tmp = localtime(&t);
+      if (tmp==NULL) error("localtime failed");
+      if (strftime(toutstr, sizeof(toutstr), fmt, tmp) == 0)
+	error("strftime returned 0");
     
-    // DATE-OBS= '2015-06-14T15:42:02.319999'
+      fitwrhda(fitsfile,"DATE-OBS",toutstr);
+    }
+    
     
     if (object)                                        /* OBJECT */
         fitwrhda(fitsfile,"OBJECT",object);

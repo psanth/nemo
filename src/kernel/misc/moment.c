@@ -172,7 +172,7 @@ int n_moment(Moment *m)
 
 real sum_moment(Moment *m)
 {
-    return sum0;   /* BAD BOY: should this not be sum1 ?? */
+    return sum1;
 }
 
 real mean_moment(Moment *m)
@@ -318,6 +318,8 @@ real sigma_moment(Moment *m)
     if (tmp <= 0.0) return 0.0;
     return sqrt(tmp);
 }
+
+// MARD = Mean Absolute Relative Difference
 
 real mard_moment(Moment *m)
 {
